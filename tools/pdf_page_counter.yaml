@@ -7,7 +7,7 @@ extra:
   python:
     source: tools/pdf_page_counter.py
 identity:
-  author: kalo_chin
+  author: kalochin
   label:
     en_US: PDF Page Counter
     zh_Hans: PDF 页数计算器

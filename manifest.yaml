@@ -1,4 +1,4 @@
-author: kalo_chin
+author: kalochin
 created_at: '2025-03-04T08:03:44.658609186Z'
 description:
   en_US: Tools for processing PDF content
@@ -32,4 +32,4 @@ resource:
 tags:
 - utilities
 type: plugin
-version: 0.0.2
+version: 0.0.3

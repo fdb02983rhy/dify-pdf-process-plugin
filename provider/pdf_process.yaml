@@ -20,3 +20,4 @@ tools:
 - tools/pdf_multi_pages_extractor.yaml
 - tools/pdf_page_counter.yaml
 - tools/pdf_splitter.yaml
+- tools/pdf_to_png.yaml

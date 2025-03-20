@@ -12,6 +12,7 @@ PDF Process is a collection of powerful tools designed to perform various PDF op
 - Multiple pages extraction with fixed page support
 - PDF page counting with customizable output formats
 - PDF splitting into individual pages
+- PDF to PNG conversion with adjustable quality
 
 ## Important Note
 All page numbers in this plugin are 1-indexed, meaning the first page of any PDF is page 1, the second is page 2, and so on.
@@ -55,6 +56,15 @@ Parameters:
 - **PDF Content**: The input PDF file (required)
 
 ![PDF Splitter Interface](./_assets/pdf_splitter.png)
+
+### 5. PDF to PNG Converter
+Converts each page of a PDF file into high-quality PNG images with configurable zoom settings.
+
+Parameters:
+- **PDF Content**: The input PDF file (required)
+- **Zoom Factor**: Quality control zoom factor (optional, defaults to 2)
+
+![PDF to PNG Converter Interface](./_assets/pdf_to_png.png)
 
 ## Author
 Created by [Kalo Chin](https://github.com/fdb02983rhy)
