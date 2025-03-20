@@ -1,6 +1,12 @@
 # Overview
 PDF Process is a group of tools for working with PDF files, allowing you to perform PDF operations.
 
+# Author
+Created by [fdb02983rhy](https://github.com/fdb02983rhy)
+
+# Repository
+https://github.com/fdb02983rhy/dify-pdf-process-plugin
+
 # Configure
 ## PDF Extractor
 PDF Extractor tool extracts a specific page from a PDF file and saves it as a new PDF.
