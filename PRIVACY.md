@@ -1,6 +1,6 @@
 # Privacy Policy for PDF Process Plugin
 
-Last Updated: March 4, 2025
+Last Updated: March 21, 2025
 
 ## What This Plugin Does
 

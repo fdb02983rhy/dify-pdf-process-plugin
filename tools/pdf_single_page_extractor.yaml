@@ -5,18 +5,18 @@ description:
   llm: A tool for extracting text from a specific page of a PDF document
 extra:
   python:
-    source: tools/pdf_extractor.py
+    source: tools/pdf_single_page_extractor.py
 identity:
-  author: kalo_chin
+  author: kalochin
   label:
-    en_US: PDF Extractor
-    zh_Hans: PDF 提取器
-  name: pdf_extractor
+    en_US: PDF Single Page Extractor
+    zh_Hans: PDF 单页提取器
+  name: pdf_single_page_extractor
 parameters:
 - form: llm
   human_description:
-    en_US: PDF file content (base64 encoded)
-    zh_Hans: PDF 文件内容（base64 编码）
+    en_US: PDF file content
+    zh_Hans: PDF 文件内容
   label:
     en_US: PDF Content
     zh_Hans: PDF 内容

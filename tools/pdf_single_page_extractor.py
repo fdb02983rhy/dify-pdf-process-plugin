@@ -1,4 +1,3 @@
-import base64
 import io
 from collections.abc import Generator
 from typing import Any, Optional
@@ -9,9 +8,9 @@ from dify_plugin.entities.tool import ToolInvokeMessage, ToolParameter
 from dify_plugin import Tool
 from dify_plugin.file.file import File
 
-class PDFExtractorTool(Tool):
+class PDFSinglePageExtractorTool(Tool):
     """
-    A tool for extracting pages from PDF files.
+    A tool for extracting a single page from PDF files.
     This tool takes a PDF file (base64 encoded or Dify file object) and a page number as input,
     and returns the specified page as a PDF blob.
     """
@@ -25,7 +24,7 @@ class PDFExtractorTool(Tool):
         message_id: Optional[str] = None,
     ) -> Generator[ToolInvokeMessage, None, None]:
         """
-        Extract a specific page from a PDF file.
+        Extract a single page from a PDF file.
 
         Args:
             tool_parameters (dict[str, Any]): Parameters for the tool
@@ -44,9 +43,10 @@ class PDFExtractorTool(Tool):
             Exception: For any other errors during PDF processing
         """
         try:
+            # Get and validate input parameters
             pdf_content = tool_parameters.get("pdf_content")
-            if pdf_content is None:
-                raise ValueError("Missing required parameter: pdf_content")
+            if not isinstance(pdf_content, File):
+                raise ValueError("PDF content must be a File object")
                 
             page_number_param = tool_parameters.get("page_number")
             if page_number_param is None:
@@ -60,18 +60,10 @@ class PDFExtractorTool(Tool):
             except (ValueError, TypeError):
                 raise ValueError(f"Invalid page number format: {page_number_param}. Must be an integer.")
             
-            if isinstance(pdf_content, File):
-                pdf_bytes = pdf_content.blob
-                original_filename = pdf_content.filename or "document"
-            elif isinstance(pdf_content, str):
-                try:
-                    pdf_bytes = base64.b64decode(pdf_content)
-                except Exception:
-                    raise ValueError("Invalid base64 encoding for PDF content")
-                original_filename = "document"
-            else:
-                raise ValueError("Invalid PDF content format. Expected base64 encoded string or File object.")
-                
+            # Get the PDF content directly from the File object
+            pdf_bytes = pdf_content.blob
+            original_filename = pdf_content.filename or "document"
+            
             pdf_file = io.BytesIO(pdf_bytes)
             
             try:
@@ -103,7 +95,7 @@ class PDFExtractorTool(Tool):
                 blob=page_buffer.getvalue(),
                 meta={
                     "mime_type": "application/pdf",
-                    "filename": output_filename
+                    "file_name": output_filename
                 },
             )
             
@@ -129,8 +121,8 @@ class PDFExtractorTool(Tool):
                 name="pdf_content",
                 label=I18nObject(en_US="PDF Content", zh_Hans="PDF 内容"),
                 human_description=I18nObject(
-                    en_US="PDF file content (base64 encoded)",
-                    zh_Hans="PDF 文件内容（base64 编码）",
+                    en_US="PDF file content",
+                    zh_Hans="PDF 文件内容",
                 ),
                 type=ToolParameter.ToolParameterType.FILE,
                 form=ToolParameter.ToolParameterForm.FORM,

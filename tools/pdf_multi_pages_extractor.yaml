@@ -1,0 +1,74 @@
+description:
+  human:
+    en_US: A tool for extracting multiple pages from a PDF with optional fixed pages
+    zh_Hans: 一个提取 PDF 多页的工具，可选择固定页
+  llm: A tool for extracting a range of pages from a PDF document along with a fixed page range if provided
+extra:
+  python:
+    source: tools/pdf_multi_pages_extractor.py
+identity:
+  author: kalochin
+  label:
+    en_US: PDF Multi Pages Extractor
+    zh_Hans: PDF 多页提取器
+  name: pdf_multi_pages_extractor
+parameters:
+- form: llm
+  human_description:
+    en_US: PDF file content
+    zh_Hans: PDF 文件内容
+  label:
+    en_US: PDF Content
+    zh_Hans: PDF 内容
+  llm_description: PDF file content in base64 encoded format
+  name: pdf_content
+  required: true
+  type: file
+- form: llm
+  human_description:
+    en_US: Fixed Start Page (starting from 1). Leave empty if not using fixed pages.
+    zh_Hans: 固定起始页码（从1开始），如果不使用固定页可留空。
+  label:
+    en_US: Fixed Start Page
+    zh_Hans: 固定起始页码
+  llm_description: Starting page number of the fixed range
+  name: fixed_start_page
+  required: false
+  type: number
+  default: 1
+- form: llm
+  human_description:
+    en_US: Fixed End Page (starting from 1). Leave empty if not using fixed pages.
+    zh_Hans: 固定结束页码（从1开始），如果不使用固定页可留空。
+  label:
+    en_US: Fixed End Page
+    zh_Hans: 固定结束页码
+  llm_description: Ending page number of the fixed range
+  name: fixed_end_page
+  required: false
+  type: number
+  default: 1
+- form: llm
+  human_description:
+    en_US: Dynamic Start Page for extraction (starting from 1)
+    zh_Hans: 动态提取的起始页码（从1开始）
+  label:
+    en_US: Start Page
+    zh_Hans: 起始页码
+  llm_description: Starting page number for dynamic extraction
+  name: start_page
+  required: true
+  type: number
+  default: 1
+- form: llm
+  human_description:
+    en_US: Dynamic End Page for extraction (must be greater than or equal to start page)
+    zh_Hans: 动态提取的结束页码（必须大于或等于起始页码）
+  label:
+    en_US: End Page
+    zh_Hans: 结束页码
+  llm_description: Ending page number for dynamic extraction
+  name: end_page
+  required: true
+  type: number
+  default: 1

@@ -1,4 +1,3 @@
-import base64
 import io
 from collections.abc import Generator
 from typing import Any, Optional, List
@@ -29,7 +28,7 @@ class PDFSplitterTool(Tool):
 
         Args:
             tool_parameters (dict[str, Any]): Parameters for the tool
-                - pdf_content (str or File): Base64 encoded PDF file content or Dify File object
+                - pdf_content (File): Dify File object containing the PDF
             user_id (Optional[str], optional): The ID of the user invoking the tool. Defaults to None.
             conversation_id (Optional[str], optional): The conversation ID. Defaults to None.
             app_id (Optional[str], optional): The app ID. Defaults to None.
@@ -44,25 +43,15 @@ class PDFSplitterTool(Tool):
         """
         try:
             pdf_content = tool_parameters.get("pdf_content")
-            if pdf_content is None:
-                raise ValueError("Missing required parameter: pdf_content")
+            if not isinstance(pdf_content, File):
+                raise ValueError("Invalid PDF content format. Expected File object.")
             
-            if isinstance(pdf_content, File):
-                pdf_bytes = pdf_content.blob
-                original_filename = pdf_content.filename or "document"
-            elif isinstance(pdf_content, str):
-                try:
-                    pdf_bytes = base64.b64decode(pdf_content)
-                except Exception:
-                    raise ValueError("Invalid base64 encoding for PDF content")
-                original_filename = "document"
-            else:
-                raise ValueError("Invalid PDF content format. Expected base64 encoded string or File object.")
-                
-            pdf_file = io.BytesIO(pdf_bytes)
+            original_filename = pdf_content.filename or "document"
             
             try:
-                pdf_reader = PyPDF2.PdfReader(pdf_file)
+                # Convert bytes to BytesIO object before passing to PdfReader
+                pdf_bytes_io = io.BytesIO(pdf_content.blob)
+                pdf_reader = PyPDF2.PdfReader(pdf_bytes_io)
             except Exception as e:
                 raise ValueError(f"Invalid PDF file: {str(e)}")
             
@@ -100,7 +89,7 @@ class PDFSplitterTool(Tool):
                     "blob": page_buffer.getvalue(),
                     "meta": {
                         "mime_type": "application/pdf",
-                        "filename": output_filename
+                        "file_name": output_filename
                     }
                 })
             

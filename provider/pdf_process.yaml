@@ -2,7 +2,7 @@ extra:
   python:
     source: provider/pdf_process.py
 identity:
-  author: kalo_chin
+  author: kalochin
   description:
     en_US: Tools for processing PDF content
     pt_BR: Tools for processing PDF content
@@ -16,6 +16,7 @@ identity:
   tags:
   - utilities
 tools:
-- tools/pdf_extractor.yaml
+- tools/pdf_single_page_extractor.yaml
+- tools/pdf_multi_pages_extractor.yaml
 - tools/pdf_page_counter.yaml
 - tools/pdf_splitter.yaml
