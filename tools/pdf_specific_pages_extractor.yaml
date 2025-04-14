@@ -1,0 +1,37 @@
+description:
+  human:
+    en_US: A tool for extracting specific pages from a PDF file
+    zh_Hans: 一个从PDF文件中提取多个指定页面的工具
+  llm: A tool that extracts specific pages from a PDF document based on a comma-separated list of page numbers
+extra:
+  python:
+    source: tools/pdf_specific_pages_extractor.py
+identity:
+  author: kalochin
+  label:
+    en_US: PDF Specific Pages Extractor
+    zh_Hans: PDF 指定页面提取器
+  name: pdf_specific_pages_extractor
+parameters:
+- form: llm
+  human_description:
+    en_US: PDF file content
+    zh_Hans: PDF 文件内容
+  label:
+    en_US: PDF Content
+    zh_Hans: PDF 内容
+  llm_description: PDF file content to extract pages from
+  name: pdf_content
+  required: true
+  type: file
+- form: llm
+  human_description:
+    en_US: Comma-separated list of page numbers to extract (e.g., '1,3,5,2')
+    zh_Hans: 要提取的页码列表，用逗号分隔（例如：'1,3,5,2'）
+  label:
+    en_US: Page Numbers
+    zh_Hans: 页码列表
+  llm_description: Comma-separated list of page numbers to extract from the PDF
+  name: page_numbers
+  required: true
+  type: string
