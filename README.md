@@ -29,14 +29,12 @@ Parameters:
 ![PDF Single Page Extractor Interface](./_assets/pdf_single_page_extractor.png)
 
 ### 2. PDF Multi Pages Extractor
-Extracts a range of pages from a PDF file with optional fixed pages support.
+Extracts specified pages from a PDF file. Supports flexible page specifications like ranges ("1-3"), individual pages ("1,2,3"), or combinations ("1-3,5"). Optionally includes a set of fixed pages before the dynamic pages. The order of pages and any duplicates specified in the input strings are preserved in the output PDF.
 
 Parameters:
-- **PDF Content**: The input PDF file (required)
-- **Start Page**: Dynamic start page for extraction (1-indexed, where page 1 is the first page, required)
-- **End Page**: Dynamic end page for extraction (must be ≥ Start Page, required)
-- **Fixed Start Page**: Optional starting page for fixed range (1-indexed when provided)
-- **Fixed End Page**: Optional ending page for fixed range (must be ≥ Fixed Start Page when provided)
+- **PDF Content**: The input PDF file (required).
+- **Fixed Pages**: Optional string specifying fixed pages to include at the beginning (1-indexed). Examples: `"1-3"`, `"5"`, `"1,3,5-7"`, `"1,3,1-2"`. Order and duplicates are preserved. Leave empty if none (default: `""`).
+- **Dynamic Pages**: Required string specifying the dynamic pages to extract (1-indexed). Examples: `"1-3"`, `"5"`, `"1,3,5-7"`, `"1,3,1-2"`. Order and duplicates are preserved (default: `"1"`).
 
 ![PDF Multi Pages Extractor Interface](./_assets/pdf_multi_pages_extractor.png)
 
