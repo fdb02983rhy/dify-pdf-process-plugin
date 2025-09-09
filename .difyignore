@@ -6,5 +6,5 @@ __pycache__
 
 .venv
 
-# Ignore GitHub issue templates so they are not processed by Dify
-.github/ISSUE_TEMPLATE/
+# Ignore all GitHub metadata from Dify processing (issue templates, workflows, actions, configs)
+.github/
