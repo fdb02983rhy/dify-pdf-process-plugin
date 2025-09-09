@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Documentation"
+    url: "https://github.com/fdb02983rhy/dify-pdf-process-plugin/blob/main/README.md"
+    about: "Check the README for detailed documentation. Issues must be in English and duplicates will be closed."
+  - name: "Repository"
+    url: "https://github.com/fdb02983rhy/dify-pdf-process-plugin"
+    about: "Visit the main repository. Issues must be in English and duplicates will be closed."

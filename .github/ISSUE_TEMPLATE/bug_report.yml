@@ -1,0 +1,93 @@
+name: "Bug report"
+description: "Report a reproducible problem. Use English only and search existing issues first."
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Important:** This issue must be written in English. Issues in other languages will be closed.
+        Please search existing open and closed issues before creating a new one to avoid duplicates.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm the following before submitting your bug report
+      options:
+        - label: I have searched existing open and closed issues for duplicates
+          required: true
+        - label: I am writing this issue in English
+          required: true
+        - label: I have read the documentation in the README
+          required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe the bug you encountered
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Use tool with parameters '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen
+      placeholder: What should have happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: A clear and concise description of what actually happened
+      placeholder: What actually happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Information about your environment
+      placeholder: |
+        - Dify version:
+        - Plugin version:
+        - Python version:
+        - Operating System:
+        - Browser (if applicable):
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here, such as screenshots, error logs, or related issues
+      placeholder: Any additional information that might help us understand the problem
+
+  - type: checkboxes
+    id: final-check
+    attributes:
+      label: Final Check
+      description: Please confirm before submitting
+      options:
+        - label: I confirm this issue is written in English and follows the template
+          required: true
