@@ -36,11 +36,7 @@ body:
     attributes:
       label: Steps to Reproduce
       description: Steps to reproduce the behavior
-      placeholder: |
-        1. Go to '...'
-        2. Click on '...'
-        3. Use tool with parameters '...'
-        4. See error
+      placeholder: Share the DSL would be helpful for reproducing the bug
     validations:
       required: true
 
@@ -68,6 +64,7 @@ body:
       label: Environment
       description: Information about your environment
       placeholder: |
+        - Dify license: self-hosted / cloud
         - Dify version:
         - Plugin version:
     validations:
