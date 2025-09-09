@@ -5,3 +5,6 @@ __pycache__
 .DS_Store
 
 .venv
+
+# Ignore GitHub issue templates so they are not processed by Dify
+.github/ISSUE_TEMPLATE/
