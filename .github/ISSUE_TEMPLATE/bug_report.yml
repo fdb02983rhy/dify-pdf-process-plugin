@@ -36,7 +36,7 @@ body:
     attributes:
       label: Steps to Reproduce
       description: Steps to reproduce the behavior
-      placeholder: Share the DSL would be helpful for reproducing the bug
+      placeholder: Share the DSL and PDF file would be helpful for reproducing the bug
     validations:
       required: true
 
