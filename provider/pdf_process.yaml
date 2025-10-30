@@ -6,7 +6,7 @@ identity:
   description:
     en_US: Tools for processing PDF content
     pt_BR: Tools for processing PDF content
-    zh_Hans: 利用 PyPDF2 处理 PDF 内容的工具
+    zh_Hans: 处理 PDF 内容的工具
   icon: icon.svg
   label:
     en_US: PDF Process
