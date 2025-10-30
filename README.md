@@ -39,11 +39,10 @@ Parameters:
 ![PDF Multi Pages Extractor Interface](./_assets/pdf_multi_pages_extractor.png)
 
 ### 3. PDF Page Counter
-Counts the total number of pages in a PDF file with customizable output format.
+Counts the total number of pages in a PDF file.
 
 Parameters:
 - **PDF Content**: The input PDF file (required)
-- **Output Format**: Choose between 'number' or 'json' format (optional, defaults to 'number')
 
 ![PDF Page Counter Interface](./_assets/pdf_page_counter.png)
 

@@ -2,7 +2,7 @@ import io
 from collections.abc import Generator
 from typing import Any, Optional
 
-import PyPDF2
+import pymupdf
 from dify_plugin.entities import I18nObject
 from dify_plugin.entities.tool import ToolInvokeMessage, ToolParameter
 from dify_plugin import Tool
@@ -42,16 +42,18 @@ class PDFSinglePageExtractorTool(Tool):
             ValueError: If the PDF content format is invalid, required parameters are missing, or the page number is out of range
             Exception: For any other errors during PDF processing
         """
+        doc = None
+        output = None
         try:
             # Get and validate input parameters
             pdf_content = tool_parameters.get("pdf_content")
             if not isinstance(pdf_content, File):
                 raise ValueError("PDF content must be a File object")
-                
+
             page_number_param = tool_parameters.get("page_number")
             if page_number_param is None:
                 raise ValueError("Missing required parameter: page_number")
-                
+
             try:
                 user_page_number = int(page_number_param)
                 if user_page_number < 1:
@@ -59,38 +61,38 @@ class PDFSinglePageExtractorTool(Tool):
                 page_number = user_page_number - 1
             except (ValueError, TypeError):
                 raise ValueError(f"Invalid page number format: {page_number_param}. Must be an integer.")
-            
+
             # Get the PDF content directly from the File object
             pdf_bytes = pdf_content.blob
             original_filename = pdf_content.filename or "document"
-            
+
             pdf_file = io.BytesIO(pdf_bytes)
-            
+
             try:
-                pdf_reader = PyPDF2.PdfReader(pdf_file)
+                doc = pymupdf.open(stream=pdf_file, filetype="pdf")
             except Exception as e:
                 raise ValueError(f"Invalid PDF file: {str(e)}")
-            
-            total_pages = len(pdf_reader.pages)
+
+            total_pages = doc.page_count
             if page_number < 0 or page_number >= total_pages:
                 raise ValueError(f"Invalid page number. The PDF has {total_pages} pages (1-{total_pages}). You entered: {user_page_number}.")
-            
-            output = PyPDF2.PdfWriter()
-            output.add_page(pdf_reader.pages[page_number])
-            
+
+            output = pymupdf.Document()
+            output.insert_pdf(doc, from_page=page_number, to_page=page_number)
+
             page_buffer = io.BytesIO()
-            output.write(page_buffer)
+            output.save(page_buffer)
             page_buffer.seek(0)
-            
+
             if original_filename.lower().endswith('.pdf'):
                 base_filename = original_filename[:-4]
             else:
                 base_filename = original_filename
-                
+
             output_filename = f"{base_filename}_page{user_page_number}.pdf"
-            
+
             yield self.create_text_message(f"Successfully extracted page {user_page_number} from PDF")
-            
+
             yield self.create_blob_message(
                 blob=page_buffer.getvalue(),
                 meta={
@@ -98,10 +100,24 @@ class PDFSinglePageExtractorTool(Tool):
                     "file_name": output_filename
                 },
             )
-            
+
+            # Clean up
+            if output:
+                output.close()
+            if doc:
+                doc.close()
+
         except ValueError as e:
+            if output:
+                output.close()
+            if doc:
+                doc.close()
             raise
         except Exception as e:
+            if output:
+                output.close()
+            if doc:
+                doc.close()
             raise Exception(f"Error extracting page from PDF: {str(e)}")
             
     def get_runtime_parameters(

@@ -2,7 +2,7 @@ import io
 from collections.abc import Generator
 from typing import Any, Optional, List
 
-import PyPDF2
+import pymupdf
 from dify_plugin.entities import I18nObject
 from dify_plugin.entities.tool import ToolInvokeMessage, ToolParameter
 from dify_plugin import Tool
@@ -84,6 +84,8 @@ class PDFMultiPagesExtractorTool(Tool):
         app_id: Optional[str] = None,
         message_id: Optional[str] = None,
     ) -> Generator[ToolInvokeMessage, None, None]:
+        doc = None
+        output = None
         try:
             # Get and validate PDF content
             pdf_content = tool_parameters.get("pdf_content")
@@ -105,11 +107,11 @@ class PDFMultiPagesExtractorTool(Tool):
             pdf_file = io.BytesIO(pdf_bytes)
 
             try:
-                pdf_reader = PyPDF2.PdfReader(pdf_file)
+                doc = pymupdf.open(stream=pdf_file, filetype="pdf")
             except Exception as e:
                 raise ValueError(f"Invalid or corrupted PDF file: {str(e)}")
 
-            total_pages = len(pdf_reader.pages)
+            total_pages = doc.page_count
             if total_pages == 0:
                 raise ValueError("The provided PDF file has no pages.")
 
@@ -124,22 +126,22 @@ class PDFMultiPagesExtractorTool(Tool):
             use_fixed = bool(fixed_page_indices)
 
             # Create the output PDF
-            output = PyPDF2.PdfWriter()
+            output = pymupdf.Document()
 
             # Add fixed pages first, preserving order and duplicates
             if use_fixed:
                 for index in fixed_page_indices:
-                    output.add_page(pdf_reader.pages[index])
+                    output.insert_pdf(doc, from_page=index, to_page=index)
 
             # Add dynamic pages, preserving order and duplicates
             for index in dynamic_page_indices:
-                 output.add_page(pdf_reader.pages[index])
+                output.insert_pdf(doc, from_page=index, to_page=index)
 
-            if len(output.pages) == 0:
+            if output.page_count == 0:
                  raise ValueError("The specified page numbers resulted in an empty PDF.")
 
             page_buffer = io.BytesIO()
-            output.write(page_buffer)
+            output.save(page_buffer)
             page_buffer.seek(0)
 
             # Generate descriptive filename
@@ -167,11 +169,25 @@ class PDFMultiPagesExtractorTool(Tool):
                 },
             )
 
+            # Clean up
+            if output:
+                output.close()
+            if doc:
+                doc.close()
+
         except ValueError as e:
             # Catch specific ValueErrors (parsing, validation) and raise them
+            if output:
+                output.close()
+            if doc:
+                doc.close()
             raise e
         except Exception as e:
             # Catch general exceptions
+            if output:
+                output.close()
+            if doc:
+                doc.close()
             raise Exception(f"An unexpected error occurred during PDF processing: {str(e)}")
 
     def get_runtime_parameters(

@@ -1,0 +1,62 @@
+MIT License
+
+Copyright (c) 2025 dify-pdf-process-plugin contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+THIRD-PARTY LICENSES
+================================================================================
+
+This project depends on the following third-party libraries, each subject to
+their own license terms:
+
+1. dify_plugin
+   License: Apache License 2.0
+   https://pypi.org/project/dify_plugin/
+
+2. PyMuPDF
+   License: GNU Affero General Public License v3.0 (AGPL-3.0) OR Commercial License
+   https://pymupdf.readthedocs.io/
+
+   IMPORTANT: PyMuPDF is dual-licensed:
+   - Open source projects: AGPL-3.0 (requires your project to be open source)
+   - Commercial/proprietary use: Requires commercial license from Artifex Software
+
+   If you use this project in a commercial or proprietary application, you must
+   either comply with AGPL-3.0 terms or obtain a commercial license for PyMuPDF
+   from Artifex Software, Inc. (https://artifex.com/)
+
+3. Pillow
+   License: MIT-CMU License (Historical PIL License)
+   https://pillow.readthedocs.io/
+
+For the complete license text of each dependency, please refer to their
+respective package documentation and license files.
+
+================================================================================
+LICENSE COMPLIANCE NOTICE
+================================================================================
+
+Users of this software must ensure compliance with all third-party licenses,
+particularly the AGPL-3.0 requirements of PyMuPDF. The AGPL-3.0 license may
+impose additional obligations on your project depending on your use case.
+
+For questions about licensing compliance, please consult with a legal
+professional or contact the respective library maintainers.

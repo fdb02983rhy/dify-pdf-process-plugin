@@ -6,5 +6,11 @@ __pycache__
 
 .venv
 
+.claude
+
+.github
+
+TODO.md
+
 # Ignore all GitHub metadata from Dify processing (issue templates, workflows, actions, configs)
 .github/
