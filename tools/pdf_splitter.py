@@ -1,12 +1,13 @@
 import io
 from collections.abc import Generator
-from typing import Any, Optional, List
+from typing import Any, Optional
 
 import pymupdf
 from dify_plugin.entities import I18nObject
 from dify_plugin.entities.tool import ToolInvokeMessage, ToolParameter
 from dify_plugin import Tool
 from dify_plugin.file.file import File
+
 
 class PDFSplitterTool(Tool):
     """
@@ -36,7 +37,7 @@ class PDFSplitterTool(Tool):
 
         Returns:
             Generator[ToolInvokeMessage, None, None]: Generator yielding the PDF pages as separate files
-            
+
         Raises:
             ValueError: If the PDF content format is invalid or required parameters are missing
             Exception: For any other errors during PDF processing
@@ -62,7 +63,7 @@ class PDFSplitterTool(Tool):
                 raise ValueError("The PDF file contains no pages.")
 
             # Prepare the base filename
-            if original_filename.lower().endswith('.pdf'):
+            if original_filename.lower().endswith(".pdf"):
                 base_filename = original_filename[:-4]
             else:
                 base_filename = original_filename
@@ -83,13 +84,15 @@ class PDFSplitterTool(Tool):
                 output_filename = f"{base_filename}_page{page_idx + 1}.pdf"
 
                 # Add to our list of files
-                page_files.append({
-                    "blob": page_buffer.getvalue(),
-                    "meta": {
-                        "mime_type": "application/pdf",
-                        "file_name": output_filename
+                page_files.append(
+                    {
+                        "blob": page_buffer.getvalue(),
+                        "meta": {
+                            "mime_type": "application/pdf",
+                            "file_name": output_filename,
+                        },
                     }
-                })
+                )
 
                 # Clean up output document for this page
                 output.close()
@@ -99,7 +102,9 @@ class PDFSplitterTool(Tool):
                 doc.close()
 
             # Send a summary message
-            yield self.create_text_message(f"Successfully split PDF into {total_pages} pages.")
+            yield self.create_text_message(
+                f"Successfully split PDF into {total_pages} pages."
+            )
 
             # Send each page as a separate blob message
             for page_file in page_files:
@@ -108,7 +113,7 @@ class PDFSplitterTool(Tool):
                     meta=page_file["meta"],
                 )
 
-        except ValueError as e:
+        except ValueError:
             if doc:
                 doc.close()
             raise
@@ -116,7 +121,7 @@ class PDFSplitterTool(Tool):
             if doc:
                 doc.close()
             raise Exception(f"Error splitting PDF into pages: {str(e)}")
-            
+
     def get_runtime_parameters(
         self,
         conversation_id: Optional[str] = None,
@@ -125,7 +130,7 @@ class PDFSplitterTool(Tool):
     ) -> list[ToolParameter]:
         """
         Get the runtime parameters for the PDF splitter tool.
-        
+
         Returns:
             list[ToolParameter]: List of tool parameters
         """

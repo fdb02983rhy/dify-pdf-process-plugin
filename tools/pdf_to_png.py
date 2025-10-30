@@ -1,6 +1,6 @@
 import io
 from collections.abc import Generator
-from typing import Any, Optional, List
+from typing import Any, Optional
 
 import pymupdf
 from PIL import Image
@@ -8,6 +8,7 @@ from dify_plugin.entities import I18nObject
 from dify_plugin.entities.tool import ToolInvokeMessage, ToolParameter
 from dify_plugin import Tool
 from dify_plugin.file.file import File
+
 
 class PDFToPNGTool(Tool):
     """
@@ -54,7 +55,7 @@ class PDFToPNGTool(Tool):
             zoom = 2 if zoom_param is None else int(zoom_param)
 
             original_filename = pdf_content.filename or "document"
-            base_filename = original_filename.rsplit('.', 1)[0]
+            base_filename = original_filename.rsplit(".", 1)[0]
 
             # Convert bytes to BytesIO object
             pdf_bytes_io = io.BytesIO(pdf_content.blob)
@@ -64,7 +65,7 @@ class PDFToPNGTool(Tool):
                 doc = pymupdf.open(stream=pdf_bytes_io, filetype="pdf")
             except Exception as e:
                 raise ValueError(f"Invalid PDF file: {str(e)}")
-            
+
             total_pages = doc.page_count
             if total_pages == 0:
                 raise ValueError("The PDF file contains no pages.")
@@ -92,20 +93,19 @@ class PDFToPNGTool(Tool):
                 # Send the PNG image
                 yield self.create_blob_message(
                     blob=img_buffer.getvalue(),
-                    meta={
-                        "mime_type": "image/png",
-                        "file_name": output_filename
-                    }
+                    meta={"mime_type": "image/png", "file_name": output_filename},
                 )
-            
+
             # Send completion message
-            yield self.create_text_message(f"Successfully converted {total_pages} pages to PNG images.")
+            yield self.create_text_message(
+                f"Successfully converted {total_pages} pages to PNG images."
+            )
 
             # Clean up
             if doc:
                 doc.close()
 
-        except ValueError as e:
+        except ValueError:
             if doc:
                 doc.close()
             raise
@@ -113,7 +113,7 @@ class PDFToPNGTool(Tool):
             if doc:
                 doc.close()
             raise Exception(f"Error converting PDF to PNG: {str(e)}")
-    
+
     def get_runtime_parameters(
         self,
         conversation_id: Optional[str] = None,
@@ -122,7 +122,7 @@ class PDFToPNGTool(Tool):
     ) -> list[ToolParameter]:
         """
         Get the runtime parameters for the PDF to PNG conversion tool.
-        
+
         Returns:
             list[ToolParameter]: List of tool parameters
         """

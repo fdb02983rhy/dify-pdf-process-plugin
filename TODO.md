@@ -1,20 +1,23 @@
 # TODO: Migrate from PyPDF2 to PyMuPDF
 
 ## Overview
+
 Migrate all PDF processing tools from PyPDF2 to PyMuPDF for better performance, consistency, and feature access.
 
 ## Status
+
 - **pdf_to_png.py**: ✅ Already using PyMuPDF (improved with proper cleanup)
 - **pdf_page_counter.py**: ✅ Migrated and tested
 - **pdf_single_page_extractor.py**: ✅ Migrated and tested
 - **pdf_multi_pages_extractor.py**: ✅ Migrated and tested
 - **pdf_splitter.py**: ✅ Migrated and tested
 
----
+______________________________________________________________________
 
 ## Migration Checklist
 
 ### Phase 1: Preparation ✅
+
 - [x] Backup current codebase (git commit)
 - [x] Update `requirements.txt`: Replace `PyPDF2~=3.0.1` with `PyMuPDF~=1.26.5`
 - [x] Install PyMuPDF: `pip install PyMuPDF~=1.26.5`
@@ -23,6 +26,7 @@ Migrate all PDF processing tools from PyPDF2 to PyMuPDF for better performance, 
 ### Phase 2: Code Migration
 
 #### 2.0 pdf_to_png.py (Already using PyMuPDF - Improvements) ✅
+
 - [x] Add `doc = None` initialization before try block for proper cleanup
 - [x] Add `filetype="pdf"` parameter to `pymupdf.open()` for explicit type handling
 - [x] Add `pix = None` after pixmap usage to release memory (Context7 best practice)
@@ -31,6 +35,7 @@ Migrate all PDF processing tools from PyPDF2 to PyMuPDF for better performance, 
 - [x] Move `doc.close()` to proper location with conditional check
 
 #### 2.1 pdf_page_counter.py (Simplest - Read-only) ✅
+
 - [x] Line 2: Change `import PyPDF2` → `import pymupdf`
 - [x] Line 52-57: Replace try-except block with:
   ```python
@@ -54,6 +59,7 @@ Migrate all PDF processing tools from PyPDF2 to PyMuPDF for better performance, 
 - [x] Verify error messages are still clear and helpful
 
 **Complete Migration Pattern for pdf_page_counter.py:**
+
 ```python
 # Lines 45-73 should look like:
 doc = None
@@ -96,6 +102,7 @@ except Exception as e:
 ```
 
 #### 2.2 pdf_single_page_extractor.py (Single Page Extract) ✅
+
 - [x] Line 5: Change `import PyPDF2` → `import pymupdf`
 - [x] Line 70: Change `PyPDF2.PdfReader(pdf_file)` → `doc = pymupdf.open(stream=pdf_file, filetype="pdf")`
 - [x] Line 74: Change `len(pdf_reader.pages)` → `doc.page_count`
@@ -115,6 +122,7 @@ except Exception as e:
 - [x] Test edge cases: first page, last page, middle page, invalid page numbers
 
 #### 2.3 pdf_splitter.py (Split All Pages) ✅
+
 - [x] Line 5: Change `import PyPDF2` → `import pymupdf`
 - [x] Line 54: Change `PyPDF2.PdfReader(pdf_bytes_io)` → `doc = pymupdf.open(stream=pdf_bytes_io, filetype="pdf")`
 - [x] Line 58: Change `len(pdf_reader.pages)` → `doc.page_count`
@@ -153,6 +161,7 @@ except Exception as e:
 - [x] Test with PDFs of various sizes (1, 5, 10, 50+ pages)
 
 #### 2.4 pdf_multi_pages_extractor.py (Complex - Multiple Pages with Ranges) ✅
+
 - [x] Line 5: Change `import PyPDF2` → `import pymupdf`
 - [x] Line 108: Change `PyPDF2.PdfReader(pdf_file)` → `doc = pymupdf.open(stream=pdf_file, filetype="pdf")`
 - [x] Line 112: Change `len(pdf_reader.pages)` → `doc.page_count`

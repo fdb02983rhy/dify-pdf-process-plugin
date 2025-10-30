@@ -8,6 +8,7 @@ from dify_plugin.entities.tool import ToolInvokeMessage, ToolParameter
 from dify_plugin import Tool
 from dify_plugin.file.file import File
 
+
 class PDFSinglePageExtractorTool(Tool):
     """
     A tool for extracting a single page from PDF files.
@@ -37,7 +38,7 @@ class PDFSinglePageExtractorTool(Tool):
 
         Returns:
             Generator[ToolInvokeMessage, None, None]: Generator yielding the PDF page blob
-            
+
         Raises:
             ValueError: If the PDF content format is invalid, required parameters are missing, or the page number is out of range
             Exception: For any other errors during PDF processing
@@ -57,10 +58,14 @@ class PDFSinglePageExtractorTool(Tool):
             try:
                 user_page_number = int(page_number_param)
                 if user_page_number < 1:
-                    raise ValueError(f"Page number must be at least 1. You entered: {user_page_number}")
+                    raise ValueError(
+                        f"Page number must be at least 1. You entered: {user_page_number}"
+                    )
                 page_number = user_page_number - 1
             except (ValueError, TypeError):
-                raise ValueError(f"Invalid page number format: {page_number_param}. Must be an integer.")
+                raise ValueError(
+                    f"Invalid page number format: {page_number_param}. Must be an integer."
+                )
 
             # Get the PDF content directly from the File object
             pdf_bytes = pdf_content.blob
@@ -75,7 +80,9 @@ class PDFSinglePageExtractorTool(Tool):
 
             total_pages = doc.page_count
             if page_number < 0 or page_number >= total_pages:
-                raise ValueError(f"Invalid page number. The PDF has {total_pages} pages (1-{total_pages}). You entered: {user_page_number}.")
+                raise ValueError(
+                    f"Invalid page number. The PDF has {total_pages} pages (1-{total_pages}). You entered: {user_page_number}."
+                )
 
             output = pymupdf.Document()
             output.insert_pdf(doc, from_page=page_number, to_page=page_number)
@@ -84,21 +91,20 @@ class PDFSinglePageExtractorTool(Tool):
             output.save(page_buffer)
             page_buffer.seek(0)
 
-            if original_filename.lower().endswith('.pdf'):
+            if original_filename.lower().endswith(".pdf"):
                 base_filename = original_filename[:-4]
             else:
                 base_filename = original_filename
 
             output_filename = f"{base_filename}_page{user_page_number}.pdf"
 
-            yield self.create_text_message(f"Successfully extracted page {user_page_number} from PDF")
+            yield self.create_text_message(
+                f"Successfully extracted page {user_page_number} from PDF"
+            )
 
             yield self.create_blob_message(
                 blob=page_buffer.getvalue(),
-                meta={
-                    "mime_type": "application/pdf",
-                    "file_name": output_filename
-                },
+                meta={"mime_type": "application/pdf", "file_name": output_filename},
             )
 
             # Clean up
@@ -107,7 +113,7 @@ class PDFSinglePageExtractorTool(Tool):
             if doc:
                 doc.close()
 
-        except ValueError as e:
+        except ValueError:
             if output:
                 output.close()
             if doc:
@@ -119,7 +125,7 @@ class PDFSinglePageExtractorTool(Tool):
             if doc:
                 doc.close()
             raise Exception(f"Error extracting page from PDF: {str(e)}")
-            
+
     def get_runtime_parameters(
         self,
         conversation_id: Optional[str] = None,
@@ -128,7 +134,7 @@ class PDFSinglePageExtractorTool(Tool):
     ) -> list[ToolParameter]:
         """
         Get the runtime parameters for the PDF extractor tool.
-        
+
         Returns:
             list[ToolParameter]: List of tool parameters
         """

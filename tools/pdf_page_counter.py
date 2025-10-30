@@ -2,11 +2,12 @@ import io
 import pymupdf
 from collections import OrderedDict
 from dify_plugin.entities import I18nObject
-from dify_plugin.entities.tool import ToolInvokeMessage, ToolParameter, ToolParameterOption
+from dify_plugin.entities.tool import ToolInvokeMessage, ToolParameter
 from dify_plugin import Tool
 from dify_plugin.file.file import File
 from collections.abc import Generator
 from typing import Any, Optional
+
 
 class PDFPageCounterTool(Tool):
     """
@@ -65,14 +66,14 @@ class PDFPageCounterTool(Tool):
             # Dynamic padding based on total pages (e.g., 3 digits for 100-999 pages)
             padding = len(str(total_pages))
             for i in range(total_pages):
-                page_dict[f"page{i+1:0{padding}d}"] = i+1
+                page_dict[f"page{i + 1:0{padding}d}"] = i + 1
             yield self.create_json_message(page_dict)
 
             # Clean up
             if doc:
                 doc.close()
 
-        except ValueError as e:
+        except ValueError:
             if doc:
                 doc.close()
             raise
@@ -80,7 +81,7 @@ class PDFPageCounterTool(Tool):
             if doc:
                 doc.close()
             raise Exception(f"Error counting pages in PDF: {str(e)}")
-            
+
     def get_runtime_parameters(
         self,
         conversation_id: Optional[str] = None,
@@ -89,7 +90,7 @@ class PDFPageCounterTool(Tool):
     ) -> list[ToolParameter]:
         """
         Get the runtime parameters for the PDF page counter tool.
-        
+
         Returns:
             list[ToolParameter]: List of tool parameters
         """
@@ -107,4 +108,4 @@ class PDFPageCounterTool(Tool):
                 file_accepts=["application/pdf"],
             ),
         ]
-        return parameters 
+        return parameters

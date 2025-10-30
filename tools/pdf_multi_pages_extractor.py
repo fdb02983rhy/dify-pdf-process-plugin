@@ -8,6 +8,7 @@ from dify_plugin.entities.tool import ToolInvokeMessage, ToolParameter
 from dify_plugin import Tool
 from dify_plugin.file.file import File
 
+
 class PDFMultiPagesExtractorTool(Tool):
     """
     A tool for extracting multiple pages from PDF files using flexible page specifications.
@@ -32,15 +33,17 @@ class PDFMultiPagesExtractorTool(Tool):
             return []
 
         indices: List[int] = []
-        parts = page_str.replace(" ", "").split(',')
+        parts = page_str.replace(" ", "").split(",")
 
         for part in parts:
             if not part:
                 continue
-            if '-' in part:
-                range_parts = part.split('-', 1)
+            if "-" in part:
+                range_parts = part.split("-", 1)
                 if len(range_parts) != 2:
-                    raise ValueError(f"Invalid range format: '{part}'. Use 'start-end'.")
+                    raise ValueError(
+                        f"Invalid range format: '{part}'. Use 'start-end'."
+                    )
 
                 start_str, end_str = range_parts
 
@@ -48,31 +51,43 @@ class PDFMultiPagesExtractorTool(Tool):
                     start = int(start_str) if start_str else 1
                     end = int(end_str) if end_str else total_pages
                 except ValueError:
-                    raise ValueError(f"Invalid page number in range: '{part}'. Pages must be integers.")
+                    raise ValueError(
+                        f"Invalid page number in range: '{part}'. Pages must be integers."
+                    )
 
                 if start < 1 or end < 1:
                     raise ValueError(f"Page numbers must be positive: '{part}'.")
                 if start > end:
-                    raise ValueError(f"Start page cannot be greater than end page in range: '{part}'.")
+                    raise ValueError(
+                        f"Start page cannot be greater than end page in range: '{part}'."
+                    )
                 if start > total_pages or end > total_pages:
-                    raise ValueError(f"Page number out of range in '{part}'. PDF has {total_pages} pages (1 to {total_pages}).")
+                    raise ValueError(
+                        f"Page number out of range in '{part}'. PDF has {total_pages} pages (1 to {total_pages})."
+                    )
 
                 indices.extend(range(start - 1, end))
             else:
                 try:
                     page_num = int(part)
                 except ValueError:
-                    raise ValueError(f"Invalid page number: '{part}'. Pages must be integers.")
+                    raise ValueError(
+                        f"Invalid page number: '{part}'. Pages must be integers."
+                    )
 
                 if page_num < 1:
-                     raise ValueError(f"Page number must be positive: '{part}'.")
+                    raise ValueError(f"Page number must be positive: '{part}'.")
                 if page_num > total_pages:
-                    raise ValueError(f"Page number {page_num} out of range. PDF has {total_pages} pages (1 to {total_pages}).")
+                    raise ValueError(
+                        f"Page number {page_num} out of range. PDF has {total_pages} pages (1 to {total_pages})."
+                    )
 
                 indices.append(page_num - 1)
 
         if not indices:
-             raise ValueError(f"No valid page numbers found in specification: '{page_str}'.")
+            raise ValueError(
+                f"No valid page numbers found in specification: '{page_str}'."
+            )
 
         return indices
 
@@ -95,11 +110,16 @@ class PDFMultiPagesExtractorTool(Tool):
             # Fetch page specification strings
             dynamic_pages_str = tool_parameters.get("dynamic_pages")
             if not dynamic_pages_str or not isinstance(dynamic_pages_str, str):
-                 raise ValueError("Missing or invalid required parameter: dynamic_pages (must be a non-empty string)")
-            fixed_pages_str = tool_parameters.get("fixed_pages", "") # Optional, defaults to empty string
+                raise ValueError(
+                    "Missing or invalid required parameter: dynamic_pages (must be a non-empty string)"
+                )
+            fixed_pages_str = tool_parameters.get(
+                "fixed_pages", ""
+            )  # Optional, defaults to empty string
             if not isinstance(fixed_pages_str, str):
-                 raise ValueError("Invalid optional parameter: fixed_pages (must be a string)")
-
+                raise ValueError(
+                    "Invalid optional parameter: fixed_pages (must be a string)"
+                )
 
             # Get the PDF content directly from the File object
             pdf_bytes = pdf_content.blob
@@ -117,11 +137,15 @@ class PDFMultiPagesExtractorTool(Tool):
 
             # Parse page strings into 0-based indices
             try:
-                 fixed_page_indices = self._parse_page_string(fixed_pages_str, total_pages)
-                 dynamic_page_indices = self._parse_page_string(dynamic_pages_str, total_pages)
+                fixed_page_indices = self._parse_page_string(
+                    fixed_pages_str, total_pages
+                )
+                dynamic_page_indices = self._parse_page_string(
+                    dynamic_pages_str, total_pages
+                )
             except ValueError as e:
-                 # Re-raise parsing errors with context
-                 raise ValueError(f"Invalid page specification: {e}")
+                # Re-raise parsing errors with context
+                raise ValueError(f"Invalid page specification: {e}")
 
             use_fixed = bool(fixed_page_indices)
 
@@ -138,35 +162,36 @@ class PDFMultiPagesExtractorTool(Tool):
                 output.insert_pdf(doc, from_page=index, to_page=index)
 
             if output.page_count == 0:
-                 raise ValueError("The specified page numbers resulted in an empty PDF.")
+                raise ValueError("The specified page numbers resulted in an empty PDF.")
 
             page_buffer = io.BytesIO()
             output.save(page_buffer)
             page_buffer.seek(0)
 
             # Generate descriptive filename
-            if original_filename.lower().endswith('.pdf'):
+            if original_filename.lower().endswith(".pdf"):
                 base_filename = original_filename[:-4]
             else:
                 base_filename = original_filename
 
-            dynamic_desc = dynamic_pages_str.replace(',', '_').replace('-', 'to')
+            dynamic_desc = dynamic_pages_str.replace(",", "_").replace("-", "to")
             if use_fixed:
-                fixed_desc = fixed_pages_str.replace(',', '_').replace('-', 'to')
-                output_filename = f"{base_filename}_fixed_{fixed_desc}_plus_{dynamic_desc}.pdf"
+                fixed_desc = fixed_pages_str.replace(",", "_").replace("-", "to")
+                output_filename = (
+                    f"{base_filename}_fixed_{fixed_desc}_plus_{dynamic_desc}.pdf"
+                )
                 success_message = f"Successfully extracted fixed pages '{fixed_pages_str}' followed by dynamic pages '{dynamic_pages_str}'"
             else:
                 output_filename = f"{base_filename}_pages_{dynamic_desc}.pdf"
-                success_message = f"Successfully extracted pages '{dynamic_pages_str}' from PDF"
+                success_message = (
+                    f"Successfully extracted pages '{dynamic_pages_str}' from PDF"
+                )
 
             yield self.create_text_message(success_message)
 
             yield self.create_blob_message(
                 blob=page_buffer.getvalue(),
-                meta={
-                    "mime_type": "application/pdf",
-                    "file_name": output_filename
-                },
+                meta={"mime_type": "application/pdf", "file_name": output_filename},
             )
 
             # Clean up
@@ -188,7 +213,9 @@ class PDFMultiPagesExtractorTool(Tool):
                 output.close()
             if doc:
                 doc.close()
-            raise Exception(f"An unexpected error occurred during PDF processing: {str(e)}")
+            raise Exception(
+                f"An unexpected error occurred during PDF processing: {str(e)}"
+            )
 
     def get_runtime_parameters(
         self,
@@ -217,7 +244,9 @@ class PDFMultiPagesExtractorTool(Tool):
             ),
             ToolParameter(
                 name="fixed_pages",
-                label=I18nObject(en_US="Fixed Pages (Optional)", zh_Hans="固定页码（可选）"),
+                label=I18nObject(
+                    en_US="Fixed Pages (Optional)", zh_Hans="固定页码（可选）"
+                ),
                 human_description=I18nObject(
                     en_US='Pages to always include at the beginning. Order and duplicates are preserved. Examples: "1-3", "5", "1,3,1-2". Leave empty if none.',
                     zh_Hans='始终包含在开头的页面。保留顺序和重复项。例如："1-3", "5", "1,3,1-2"。如果没有则留空。',

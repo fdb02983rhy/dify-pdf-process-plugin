@@ -15,6 +15,7 @@ This plugin processes PDF files you provide to extract, manipulate content, and 
 ## Not Collected
 
 No personal information is collected or stored, including:
+
 - Names or contact details
 - Login credentials
 - Device information
